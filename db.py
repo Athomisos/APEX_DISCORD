@@ -8,16 +8,29 @@ def get_conn():
 
 
 
-def not_register():
+def is_player_register(id_user):
     """
-        Need to be write
+        Simple check if the player is already register or not
     """
-    return True
+    conn = get_conn()
+    cur = conn.cursor()
+    print(f"\n-------\nREQEST : SELECT * FROM player WHERE id_discord=\"{id_user}\";")
+    cur.execute(f"SELECT * FROM player WHERE id_discord=\"{id_user}\";")
+    rows = cur.fetchall()
+    print(f"RESUTL = {rows}\n-------\n")
+    if(len(rows) == 0):
+        return True
+    return False
 
 def new_player(ctx, token, nickname, rank, bio):
-    if(not_register()):
-        conn = get_conn()
-        print(f'\n-------\nREQEST : INSERT INTO player(id_discord,last_discord,token,psuedo,player_rank,bio) VALUES ("{ctx.author.id}","{ctx.author}","{token}","{nickname}","{rank}","{bio}");\n-------\n')
-        conn.execute(f'INSERT INTO player(id_discord,last_discord,token,pseudo,player_rank,bio) VALUES ("{ctx.author.id}","{ctx.author}","{token}","{nickname}","{rank}","{bio}");')
-    else:
-        return False
+    """
+        Insert new player in the db
+    """
+    conn = get_conn()
+    cur = conn.cursor()
+    req = f'INSERT INTO player VALUES (null, "{ctx.author.id}","{ctx.author}","{token}","{nickname}","{rank}","{bio}");'
+    print(f'\n-------\nREQEST :  {req}\n-------\n')
+    cur.execute(req)
+    conn.commit()
+    print("-- DONE --")
+    conn.close()

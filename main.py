@@ -41,18 +41,15 @@ async def aboutDyver(ctx):
 
 @bot.command(name='profile', help="  !profile <IG_nickname> <highest_rank> <bio> Create your profile")
 async def profile(ctx, nickname, rank, bio):
-    print("before for")
-    if(db.not_register()):
+    if(db.is_player_register(ctx.author.id)):
         token = random_string_generator(32, string.ascii_letters)
         db.new_player(ctx, token, nickname, rank, bio)
-        await ctx.send(f"Welcome aboard :smile:, here is a recap of your identity. if there is an error you can use `!update`\n **Nickname :** {nickname}\n**Highest rank :**{rank}\n**Bio :**{bio}")
+        await ctx.send(f"Welcome aboard :smile:, here is a recap of your identity. if there is an error you can use `!update`\n**Nickname :** {nickname}\n**Highest rank : **{rank}\n**Bio : **{bio}")
         await ctx.author.create_dm()
         await ctx.author.dm_channel.send(
             f'Hey {ctx.author.name}, here is your recovery token account keep it private :smile:\n**TOKEN: **`{token}`')
     else:
-        await ctx.send("Plz use !update")
-        
-    print("exit")
+        await ctx.send("You are already register, please do !update :smile:")
 
 
 # Run bot
