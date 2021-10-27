@@ -52,5 +52,17 @@ async def profile(ctx, nickname, rank, bio):
         await ctx.send("You are already register, please do !update :smile:")
 
 
+@bot.command(name='info', help="    !info @someone")
+async def info(ctx, user):
+    user = user.replace("<@!", "")
+    user = user.replace(">", "")
+    if(not db.is_player_register(user)):
+        print("Register\n")
+        data = db.show_player(user)
+        print(data)
+        await ctx.send("**Nickname :** " + data[0] + " \n**Highest rank : **"+ data[1] + "\n**Bio : **" + data[2] )
+    else:
+        await ctx.send("NOP")
+
 # Run bot
 bot.run(TOKEN)
