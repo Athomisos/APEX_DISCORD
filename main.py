@@ -26,24 +26,16 @@ async def on_ready():
     await bot.change_presence(activity=activity)
 
 # MANAGE CMD
-@bot.command(name='manage', help="  Your settings")
-async def aboutDyver(ctx):
-    if(True):
-        OutStr = "TEST"
-    else:
-        OutStr = "Plz retry"
-    await ctx.author.create_dm()
-    await ctx.author.dm_channel.send(
-        f'Hey {ctx.author.name}, to register your self you will need to awnser to my quetion :smile:. \n<IG_Nickname> <Rank> <Short_description>'
-    )
-    await ctx.send(f'Hey {ctx.author.name}, plz check your DM')
+@bot.command(name='team', help="  !team @captain @player1 @player2 ")
+async def register_team(ctx):
+    await ctx.send("Working on it :smile:")
 
 
 @bot.command(name='profile', help="  !profile <IG_nickname> <highest_rank> <bio> Create your profile")
 async def profile(ctx, nickname, rank, bio):
     if(db.is_player_register(ctx.author.id)):
         token = random_string_generator(32, string.ascii_letters)
-        db.new_player(ctx, token, nickname, rank, bio)
+        await db.new_player(ctx, token, nickname, rank, bio)
         await ctx.send(f"Welcome aboard :smile:, here is a recap of your identity. if there is an error you can use `!update`\n**Nickname :** {nickname}\n**Highest rank : **{rank}\n**Bio : **{bio}")
         await ctx.author.create_dm()
         await ctx.author.dm_channel.send(
@@ -62,7 +54,8 @@ async def info(ctx, user):
         print(data)
         await ctx.send("**Nickname :** " + data[0] + " \n**Highest rank : **"+ data[1] + "\n**Bio : **" + data[2] )
     else:
-        await ctx.send("NOP")
+        await ctx.send("This player is not register")
+        print("NOP")
 
 # Run bot
 bot.run(TOKEN)
