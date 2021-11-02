@@ -15,8 +15,8 @@ os.system("./script/check_db.sh")
 
 bot = commands.Bot(command_prefix='!')
 
-def random_string_generator(str_size, allowed_chars):
-    return ''.join(random.choice(allowed_chars) for x in range(str_size))
+def get_token():
+    return ''.join(random.choice(string.ascii_letters) for x in range(32))
 
 # Set custom status
 @bot.event
@@ -28,15 +28,15 @@ async def on_ready():
 # MANAGE CMD
 @bot.command(name='team', help="  !team @captain @player1 @player2 ")
 async def register_team(ctx):
-    await ctx.send("Working on it :smile:")
+    await ctx.send("https://tenor.com/view/bug-fix-fixing-bugs-in-your-code-bugs-code-sinking-gif-17779185")
 
 
-@bot.command(name='profile', help="  !profile <IG_nickname> <highest_rank> <bio> Create your profile")
+@bot.command(name='profile', help="!profile IG_nickname highest_rank \"Your bio\" Create your profile")
 async def profile(ctx, nickname, rank, bio):
     if(db.is_player_register(ctx.author.id)):
-        token = random_string_generator(32, string.ascii_letters)
+        token = get_token()
         await db.new_player(ctx, token, nickname, rank, bio)
-        await ctx.send(f"Welcome aboard :smile:, here is a recap of your identity. if there is an error you can use `!update`\n**Nickname :** {nickname}\n**Highest rank : **{rank}\n**Bio : **{bio}")
+        await ctx.send(f"Welcome aboard :smile:, here is a recap of your identity. if there is an error you can use `!update`\n**Nickname :** `{nickname}`\n**Highest rank : **`{rank}`\n**Bio : **`{bio}`")
         await ctx.author.create_dm()
         await ctx.author.dm_channel.send(
             f'Hey {ctx.author.name}, here is your recovery token account keep it private :smile:\n**TOKEN: **`{token}`')
@@ -44,7 +44,7 @@ async def profile(ctx, nickname, rank, bio):
         await ctx.send("You are already register, please do !update :smile:")
 
 
-@bot.command(name='info', help="    !info @someone")
+@bot.command(name='info', help="!info @someone")
 async def info(ctx, user):
     user = user.replace("<@!", "")
     user = user.replace(">", "")
@@ -52,10 +52,26 @@ async def info(ctx, user):
         print("Register\n")
         data = db.show_player(user)
         print(data)
-        await ctx.send("**Nickname :** " + data[0] + " \n**Highest rank : **"+ data[1] + "\n**Bio : **" + data[2] )
+        await ctx.send("**Nickname :** `" + data[0] + "` \n**Highest rank : **`"+ data[1] + "`\n**Bio : **`" + data[2] + "`")
     else:
         await ctx.send("This player is not register")
         print("NOP")
 
+@bot.command(name='update', help="!update token IG_nickname highest_rank \"Your bio\" Update your profile")
+async def update_profile(ctx, token, nickname, rank, bio ): #
+    if(not db.is_player_register(ctx.author.id)):
+        new_token = get_token()
+        db_token = db.show_token(ctx.author.id)
+        print("CURRENT TOKEN :" + db_token[0])
+        if(db_token[0] == token):
+            await db.update_player(ctx, new_token, nickname, rank, bio)
+            await ctx.author.create_dm()
+            await ctx.author.dm_channel.send(
+            f'Hey {ctx.author.name}, here is your recovery token account keep it private :smile:\n**TOKEN: **`{new_token}`')
+            await ctx.send(f"Done :smile:\n**Nickname :** `{nickname}`\n**Highest rank : **`{rank}`\n**Bio : **`{bio}`\nYou can check with !info @{ctx.author} !")
+        else:
+            await ctx.send("**ERROR** Bad token")
+    else:
+        await ctx.send("You are not register")
 # Run bot
 bot.run(TOKEN)
