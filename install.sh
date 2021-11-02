@@ -77,7 +77,7 @@ echo -e "\e[32m--------| \e[1;32mINSTALATION OF DEPENDENCIES\e[32m |--------\e[0
 apt install -y python3-pip sqlite3 git
 
 echo -e "\e[32m--------| \e[1;32mPYTHON3 LIB\e[32m |--------\e[0m"
-pip3 install discord.py sqlite3 python-dotenv
+pip3 install discord.py sqlitepy python-dotenv
 
 ## GIT CLONE
 echo -e "\e[32m--------| \e[1;32mGIT CLONE\e[32m |--------\e[0m"
