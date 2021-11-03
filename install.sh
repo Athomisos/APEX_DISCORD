@@ -71,7 +71,6 @@ function ask_yes_or_no() {
     return 1
 }
 
-if [ $# - ]
 #Install python3 and lib
 echo -e "\e[32m--------| \e[1;32mINSTALATION OF DEPENDENCIES\e[32m |--------\e[0m"
 apt install -y python3-pip sqlite3 git
@@ -81,4 +80,4 @@ pip3 install discord.py sqlitepy python-dotenv
 
 ## GIT CLONE
 echo -e "\e[32m--------| \e[1;32mGIT CLONE\e[32m |--------\e[0m"
-echo "git clone https://github.com/Athomisos/APEX_DISCORD.git"
+git clone https://github.com/Athomisos/APEX_DISCORD.git
