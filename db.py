@@ -58,11 +58,3 @@ def commit_query(query):
     conn = sqlite3.connect(PATH_TO_DB)
     conn.execute(query)
     return conn.commit()
-
-
-
-"""
-UPDATE player
-SET id_discord={ctx.author.id},last_discord={ctx.author}, token={new_token}, pseudo={nickname}, player_rank={rank}, bio={bio}
-WHERE id_discord={ctx.author.id};
-"""

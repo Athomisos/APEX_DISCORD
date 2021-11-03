@@ -31,6 +31,12 @@ async def register_team(ctx):
     await ctx.send("https://tenor.com/view/bug-fix-fixing-bugs-in-your-code-bugs-code-sinking-gif-17779185")
 
 
+
+"""
+    CMD : !profile
+    USAGE : !profile IG_nickname highest_rank "Your bio"
+    DESCRIPTION : Register your self on our system
+"""
 @bot.command(name='profile', help="!profile IG_nickname highest_rank \"Your bio\" Create your profile")
 async def profile(ctx, nickname, rank, bio):
     if(db.is_player_register(ctx.author.id)):
@@ -44,6 +50,11 @@ async def profile(ctx, nickname, rank, bio):
         await ctx.send("You are already register, please do !update :smile:")
 
 
+"""
+    CMD : !info
+    USAGE : !info @someone
+    DESCRIPTION : Get player information
+"""
 @bot.command(name='info', help="!info @someone")
 async def info(ctx, user):
     user = user.replace("<@!", "")
@@ -54,6 +65,12 @@ async def info(ctx, user):
     else:
         await ctx.send("This player is not register")
 
+
+"""
+    CMD : !update
+    USAGE : !update token IG_nickname highest_rank "Your bio"
+    DESCRIPTION : Update your player profile
+"""
 @bot.command(name='update', help="!update token IG_nickname highest_rank \"Your bio\" Update your profile")
 async def update_profile(ctx, token, nickname, rank, bio ): #
     if(not db.is_player_register(ctx.author.id)):
@@ -69,5 +86,7 @@ async def update_profile(ctx, token, nickname, rank, bio ): #
             await ctx.send("**ERROR** Bad token")
     else:
         await ctx.send("You are not register")
+
+
 # Run bot
 bot.run(TOKEN)
