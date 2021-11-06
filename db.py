@@ -28,6 +28,13 @@ async def update_player(ctx, new_token, nickname, rank, bio):
                 WHERE id_discord={ctx.author.id};"
     return commit_query(query)
 
+async def insert_team(ctx, player1, player2, Name, tag, about):
+    """
+        Create new team !
+    """
+    query = f"INSERT INTO team VALUES (null, {ctx.author.id}, {player1}, {player2}, \"{Name}\", \"{tag}\", \"{about}\");"
+    return commit_query(query)
+
 def show_player(discord_id):
     """
         Give an list with the info of a player

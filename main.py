@@ -18,19 +18,16 @@ bot = commands.Bot(command_prefix='!')
 def get_token():
     return ''.join(random.choice(string.ascii_letters) for x in range(32))
 
+def get_id_from_ping(user):
+    user = user.replace("<@!", "")
+    return(user.replace(">", ""))
+
 # Set custom status
 @bot.event
 async def on_ready(): 
     print(f'{bot.user} has connected to Discord!')
     activity = discord.Game(name="be in BETA", type=4)
     await bot.change_presence(activity=activity)
-
-# MANAGE CMD
-@bot.command(name='team', help="  !team @captain @player1 @player2 ")
-async def register_team(ctx):
-    await ctx.send("https://tenor.com/view/bug-fix-fixing-bugs-in-your-code-bugs-code-sinking-gif-17779185")
-
-
 
 """
     CMD : !profile
@@ -57,8 +54,7 @@ async def profile(ctx, nickname, rank, bio):
 """
 @bot.command(name='info', help="!info @someone")
 async def info(ctx, user):
-    user = user.replace("<@!", "")
-    user = user.replace(">", "")
+    user = get_id_from_ping(user)
     if(not db.is_player_register(user)):
         data = db.show_player(user)
         await ctx.send("**Nickname :** `" + data[0] + "` \n**Highest rank : **`"+ data[1] + "`\n**Bio : **`" + data[2] + "`")
@@ -86,6 +82,28 @@ async def update_profile(ctx, token, nickname, rank, bio ): #
             await ctx.send("**ERROR** Bad token")
     else:
         await ctx.send("You are not register")
+
+
+# MANAGE CMD
+"""
+    CMD : !team
+    USAGE : !team @player1 @player2 "Name" tag "about your team"
+    DESCRIPTION : a new team in the DB
+"""
+@bot.command(name='team', help="  !team @player1 @player2 ")
+async def register_team(ctx, player1, player2, Name, tag, about):
+    if(len(tag) > 6):
+        await ctx.send("Your tag need btw 1 and 5 !")
+        return 0
+    player1 = get_id_from_ping(player1)
+    player2 = get_id_from_ping(player2)
+    print(f"C={ctx.author.id},\nP1={player1}\nP2={player2}\nNAME={Name}\ntag={tag}\nabout={about}")
+    if(not db.is_player_register(player1) and not db.is_player_register(ctx.author.id) and not db.is_player_register(player2)):
+        await db.insert_team(ctx, player1, player2, Name, tag, about)
+        await ctx.send("All player Ok !")
+    
+    
+#await ctx.send("https://tenor.com/view/bug-fix-fixing-bugs-in-your-code-bugs-code-sinking-gif-17779185")
 
 
 # Run bot
