@@ -1,5 +1,10 @@
 # Scrimex
 
+
+This project is still under development!
+
+---
+
 Manual installation of dependencies :
 ```bash
 apt install python3-pip sqlite3 git
