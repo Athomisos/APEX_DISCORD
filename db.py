@@ -12,6 +12,13 @@ def is_player_register(id_user):
         return True
     return False
 
+def get_team_name(id):
+    """
+        Get team of a player
+    """
+    query = f'SELECT team_name FROM team WHERE capitain=\"{id}\" OR player_one=\"{id}\" OR player_two=\"{id}\"'
+    return fetchall_query(query)
+
 async def new_player(ctx, token, nickname, rank, bio):
     """
         Insert new player in the db

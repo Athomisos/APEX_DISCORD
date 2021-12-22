@@ -57,7 +57,8 @@ async def info(ctx, user):
     user = get_id_from_ping(user)
     if(not db.is_player_register(user)):
         data = db.show_player(user)
-        await ctx.send("**Nickname :** `" + data[0] + "` \n**Highest rank : **`"+ data[1] + "`\n**Bio : **`" + data[2] + "`")
+        team = db.get_team(user)
+        await ctx.send("**Nickname :** `" + data[0] + "` \n**Highest rank : **`"+ data[1] + "`\n**Bio : **`" + data[2] + "`\n**Team :** `"+ team[4] + "`")
     else:
         await ctx.send("This player is not register")
 
@@ -79,7 +80,7 @@ async def update_profile(ctx, token, nickname, rank, bio ): #
             f'Hey {ctx.author.name}, here is your recovery token account keep it private :smile:\n**TOKEN: **`{new_token}`')
             await ctx.send(f"Done :smile:\n**Nickname :** `{nickname}`\n**Highest rank : **`{rank}`\n**Bio : **`{bio}`\nYou can check with !info @{ctx.author} !")
         else:
-            await ctx.send("**ERROR** Bad token")
+            await ctx.send("**ERROR**: Bad token")
     else:
         await ctx.send("You are not register")
 
@@ -92,18 +93,34 @@ async def update_profile(ctx, token, nickname, rank, bio ): #
 """
 @bot.command(name='team', help="  !team @player1 @player2 ")
 async def register_team(ctx, player1, player2, Name, tag, about):
+    # Check tag
     if(len(tag) > 6):
         await ctx.send("Your tag need btw 1 and 5 !")
         return 0
     player1 = get_id_from_ping(player1)
     player2 = get_id_from_ping(player2)
+    # Check roster
+    """
+    if(player1 == player2 or ctx.author.id == player2 or player1 == ctx.author.id ):
+        await ctx.send("Same player !")
+        return"""
     print(f"C={ctx.author.id},\nP1={player1}\nP2={player2}\nNAME={Name}\ntag={tag}\nabout={about}")
     if(not db.is_player_register(player1) and not db.is_player_register(ctx.author.id) and not db.is_player_register(player2)):
         await db.insert_team(ctx, player1, player2, Name, tag, about)
-        await ctx.send("All player Ok !")
+        await ctx.send(f"**RECAP OF TEAM {Name}:**\n Roster = {ctx.author.id}, {player1}, {player2}\nTag = {tag}\nabout = {about}")
     
     
 #await ctx.send("https://tenor.com/view/bug-fix-fixing-bugs-in-your-code-bugs-code-sinking-gif-17779185")
+
+@bot.command(name='teamof', help="  !teamof @someone")
+async def register_team(ctx, user):
+    user = get_id_from_ping(user)
+    teams = db.get_team_name(user)
+    print(teams)
+    out = f"Team of "+ db.show_player(user)[0] + " are "
+    for team in teams:
+        out += "`" + team[0] + "` " 
+    await ctx.send(out)
 
 
 # Run bot
